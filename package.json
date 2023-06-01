@@ -1,0 +1,29 @@
+{
+	"name": "test-logger",
+	"version": "1.0.0",
+	"main": "index.js",
+	"description": "description of test-logger",
+	"author": "rik <rcousens@colt.com> (http://www.colt.com/)",
+	"license": "MIT",
+	"keywords": [
+		"Colt",
+		"NODEJS"
+	],
+	"repository": {
+		"type": "git",
+		"url": "git@ssh.dev.azure.com:v3/rcousens0730/test-logger/test-logger"
+	},
+	"dependencies": {
+		"fs": "^0.0.1-security",
+		"path": "^0.12.7",
+		"pino": "^8.14.1",
+		"simple-node-logger": "^21.8.12"
+	},
+	"devDependencies": {},
+	"scripts": {
+		"start": "node server.js",
+		"clean": "rd /q/s node_modules",
+		"doc": "jsdoc -r src --verbose",
+		"upgrade": "npx yarn-upgrade-all"
+	}
+}

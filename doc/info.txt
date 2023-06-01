@@ -1,0 +1,3 @@
+https://www.npmjs.com/package/simple-node-logger
+
+https://stackoverflow.com/questions/65448014/how-to-use-simple-node-logger-module
