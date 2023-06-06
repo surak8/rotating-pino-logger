@@ -5,7 +5,11 @@
 			"name": "debug-current",
 			"program": "${file}",
 			"request": "launch",
-			"type": "node"
+			"type": "node",
+			"console": "externalTerminal",
+			"env": {
+				"PINO_LOG_LEVEL": "debug"
+			}
 		},
 		{
 			"name": "debug-index",

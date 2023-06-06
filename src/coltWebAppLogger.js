@@ -55,6 +55,11 @@ class ColtWebAppLogger {
 			},
 			timestamp: () => { return this.myDate(new Date()); }
 		};
+
+		//this._logger = pino();
+		//this._logger = pino(opts);
+		//this._logger = pino({ prettyPrint: true, });
+
 		this._logger = pino(opts,
 			pino.multistream([
 				{ level: LOG_LEVEL, stream: fs.createWriteStream(this.logFilename, { flags: 'a' }) },

@@ -14,15 +14,19 @@
 		"url": "git@ssh.dev.azure.com:v3/rcousens0730/test-logger/test-logger"
 	},
 	"dependencies": {
-		"fs": "^0.0.1-security",
-		"path": "^0.12.7",
-		"pino": "^8.14.1",
-		"simple-node-logger": "^21.8.12"
+		"compare-versions": "^6.0.0-rc.1",
+		"pino": "6.10.0"
 	},
 	"devDependencies": {},
 	"scripts": {
-		"start": "node server.js",
-		"clean": "rd /q/s node_modules",
+		"start": "node src/index.js",
+		"clean": "yarn clean:0&&yarn clean:1&yarn clean:2&&yarn clean:3&&yarn clean:4&&yarn clean:5",
+		"clean:0": "IF EXIST node_modules RD /Q/S node_modules",
+		"clean:1": "IF EXIST logs RD /q/s logs",
+		"clean:2": "IF EXIST test-logger RD /q/s test-logger",
+		"clean:3": "IF EXIST yarn.lock DEL /q yarn.lock",
+		"clean:4": "IF EXIST yarn-error.log DEL /q yarn-error.log",
+		"clean:5": "IF EXIST package-lock.json DEL /q package-lock.json",
 		"doc": "jsdoc -r src --verbose",
 		"upgrade": "npx yarn-upgrade-all"
 	}
