@@ -7,6 +7,7 @@ const PROP_LOG_FILE_NAME = '_logFilename';
 const PROP_LOG_FILE_DATE = '_logDatetime';
 const PROP_NAME_TIME_SYM = 'pino-time-sym';
 const PROP_NAME_BINDINGS = 'pino-chinding-sym';
+const MILLISECONDS_PER_DAY = 24 * 60 * 60 * 1000;
 
 /**
  * Extract the name of this package.
@@ -27,7 +28,6 @@ function readPackageName() {
 	return ret;
 }
 
-const MILLISECONDS_PER_DAY = 24 * 60 * 60 * 1000;
 /**
  * An object which functions as a rotating file-logger.
  */
@@ -131,7 +131,6 @@ var MyPinoRotatingLogger = {
 		} else if (vnow > vlog) {
 			// close the current one, and open a new one.
 			if (this._stream) {
-				//this._stream.flush();
 				this._stream.close();
 				this._stream = null;
 			}

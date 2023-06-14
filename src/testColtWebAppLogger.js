@@ -1,7 +1,7 @@
 'use strict';
 const logger = require('./coltWebAppLogger')();
 
-function logStuff(alogger) {
+async function logStuff(alogger) {
 	alogger.fatal('fatal');
 	alogger.error('error');
 	alogger.warn('warn');
@@ -14,8 +14,9 @@ function logStuff(alogger) {
 /*
 * main - line function	
 */
-function main() {
+async function main() {
 	logger.info('here');
+	logStuff(logger);
 }
 // #endregion main-line function
 

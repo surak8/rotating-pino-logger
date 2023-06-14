@@ -13,13 +13,13 @@
 		},
 		{
 			"name": "debug-index",
-			"program": "${workspaceFolder}/src/index.js",
+			"program": "${workspaceFolder}/src/testColtWebAppLogger.js",
 			"request": "launch",
 			"type": "node"
 		},
 		{
-			"name": "debug-riktest",
-			"program": "${workspaceFolder}/src/riktest.js",
+			"name": "debug-rotating-logger",
+			"program": "${workspaceFolder}/src/testRotatingLogger.js",
 			"request": "launch",
 			"type": "node"
 		}
