@@ -27,42 +27,11 @@ function readPackageName() {
 	return ret;
 }
 
+const MILLISECONDS_PER_DAY = 24 * 60 * 60 * 1000;
 /**
  * An object which functions as a rotating file-logger.
  */
-const MyPinoRotatingLogger = {
-	/** 
-	 * human-readable months
-	 */
-	months: [
-		'JAN', 'FEB', 'MAR',
-		'APR', 'MAY', 'JUN',
-		'JUL', 'AUG', 'SEP',
-		'OCT', 'NOV', 'DEC',
-	],
-	/**
-	 * Increment the underlying date of this logger.
-	 * @param {Integer} ndays number of days to advance
-	 */
-	addDays: async function (ndays) {
-		var newDate;
-
-		if (ndays && Number.isSafeInteger(ndays)) {
-			//currentDate = this[PROP_LOG_FILE_DATE];
-			//tmp = new Date(currentDate);
-			//console.log(`current log-date:${this.dateFormat(new Date(tmp))}`);
-			//console.log(`current log-file:${this[PROP_LOG_FILE_NAME]}\r\n`);
-			////console.log(`DAY=${tmp.getDate()},MONTH=${tmp.getMonth()},YEAR=${tmp.getFullYear()}  `);
-
-			//newDate = this[PROP_LOG_FILE_DATE] + ndays * 24 * 60 * 60 * 1000;
-			newDate = this[PROP_LOG_FILE_DATE] + ndays * 24 * 60 * 60 * 1000;
-			//console.log(`new date:${this.logFileFormat(new Date(newDate))}\r\n`);
-			console.log(`before: log-name=${this[PROP_LOG_FILE_NAME]}`);
-			await this.setLogfilenameFromDate(newDate);
-			console.log(`after:  log-name=${this[PROP_LOG_FILE_NAME]}`);
-			//console.log(`increment to ${this.dateFormat(new Date(newDate))}\r\n`);
-		}
-	},
+var MyPinoRotatingLogger = {
 	dateFormat: function (aDate) {
 		if (aDate)
 			return `${this.zeroPad(aDate.getDate())}-` +
@@ -77,44 +46,42 @@ const MyPinoRotatingLogger = {
 	},
 
 	formatDate: function (aDate) { return `${this.dateFormat(aDate)} ${this.timeFormat(aDate)}`; },
+	incrementLogDate: function () {
+		if (!this[PROP_LOG_FILE_DATE]) this[PROP_LOG_FILE_DATE] = Date.now();
+		this[PROP_LOG_FILE_DATE] += MILLISECONDS_PER_DAY;
+	},
 	init: function () {
+		Object.defineProperty(this, 'months', {
+			value: [
+				'JAN', 'FEB', 'MAR',
+				'APR', 'MAY', 'JUN',
+				'JUL', 'AUG', 'SEP',
+				'OCT', 'NOV', 'DEC',
+			], writable: false
+		});
 		Object.defineProperty(this, PROP_PKG_NAME, { value: readPackageName(), writable: false });
 		Object.defineProperty(this, PROP_LOG_FILE_NAME, { value: 'dummy', writable: true });
 		Object.defineProperty(this, PROP_NAME_TIME_SYM, { value: reqPino.symbols.timeSym, writable: false });
-		Object.defineProperty(this, PROP_NAME_BINDINGS, { value: true, writable: false });
+		Object.defineProperty(this, PROP_NAME_BINDINGS, { value: reqPino.symbols.chindingsSym, writable: false });
 		Object.defineProperty(this, 'writable', { value: true, writable: false });
 		Object.defineProperty(this, reqPino.symbols.needsMetadataGsym, { value: true, writable: false });
 		Object.defineProperty(this, PROP_LOG_FILE_DATE, { value: Date.now(), writable: true });
-		console.debug(`package-name=${this[PROP_PKG_NAME]}`);
-		this.setLogfilenameFromDate(this[PROP_LOG_FILE_DATE]);
-		console.debug(`log-filename=${this[PROP_LOG_FILE_NAME]}`);
+		this[PROP_LOG_FILE_DATE] = new Date(Date.now() - 3 * MILLISECONDS_PER_DAY);
 		return this;
 	},
 	logDate: function () { return this.formatDate(new Date(this[PROP_LOG_FILE_DATE])); },
-	setLogfilenameFromDate: async function (aDate) {
+	filenameFromDate: function (aDate) {
 		var tmp, dir;
 
 		if (aDate) {
-			tmp =
-				path.resolve(
-					path.join(
-						process.cwd(),
-						this[PROP_PKG_NAME] +
-						this.logFileFormat(new Date(aDate)) +
-						'.log'));
-			if (!fs.existsSync(dir = path.dirname(tmp)))
-				fs.mkdirSync(dir, { recursive: true });
-			if (this._stream) {
-				//await this._stream.close((a, b, c, d) => console.log(`closed ${this[PROP_LOG_FILE_NAME]}`));
-				this._stream.close();
-				this._stream = null;
-			}
-			this._stream = fs.createWriteStream(tmp, { flag: 'a' });
-			this[PROP_LOG_FILE_NAME] = tmp;
-			console.log(`opened ${tmp}`);
+			tmp = path.resolve(path.join(
+				process.cwd(),
+				this[PROP_PKG_NAME] + this.logFileFormat(new Date(aDate)) + '.log'));
+			if (!fs.existsSync(dir = path.dirname(tmp))) fs.mkdirSync(dir, { recursive: true });
+			return tmp;
 		}
-		return tmp;
 	},
+
 	setupBindings: function (pino) {
 		if (pino) {
 			Object.defineProperty(this, 'pinoInstance', { value: pino, writable: false });
@@ -138,8 +105,40 @@ const MyPinoRotatingLogger = {
 				`${this.zeroPad(aDate.getMilliseconds())}`;
 	},
 	timestamp: function () { return `,"time":"${this.formatDate(new Date())}"`; },
+	calcDate: function (aDate) {
+		if (aDate)
+			return aDate.getFullYear() * 10000 +
+				aDate.getMonth() * 100 +
+				aDate.getDate();
+		return 0;
+	},
+	openNewLogFile: function (aDate) {
+		var tmp;
+
+		this[PROP_LOG_FILE_NAME] = tmp = this.filenameFromDate(aDate);
+		this._stream = fs.createWriteStream(tmp, { flag: 'as' });
+		console.log(`opened ${tmp}`);
+		return tmp;
+	},
 	write: async function (msg) {
-		//console.debug(`MSG=${msg}`);
+		var vnow, vlog, dnow, dlog;
+
+		vnow = this.calcDate(dnow = new Date());
+		vlog = this.calcDate(dlog = new Date(this[PROP_LOG_FILE_DATE]));
+
+		if (!this._stream) {
+			this.openNewLogFile(dlog);
+		} else if (vnow > vlog) {
+			// close the current one, and open a new one.
+			if (this._stream) {
+				//this._stream.flush();
+				this._stream.close();
+				this._stream = null;
+			}
+			this[PROP_LOG_FILE_DATE] = dnow;
+			this.openNewLogFile(dnow);
+		}
+
 		if (this._stream)
 			this._stream.write(msg);
 		else

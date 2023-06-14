@@ -25,6 +25,10 @@ async function main() {
 	console.log(`currentDate=${rotatingLogger.logFileFormat(adate)}`);
 
 	await rotatingLogger.testLevels();
+	rotatingLogger.incrementLogDate();
+	await rotatingLogger.testLevels();
+	rotatingLogger.incrementLogDate();
+	await rotatingLogger.testLevels();
 	//await rotatingLogger.addDays(1);
 	//await rotatingLogger.testLevels();
 	//await rotatingLogger.addDays(-2);
