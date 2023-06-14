@@ -1,5 +1,5 @@
 'use strict';
-const logger = require('./coltWebAppLogger')();
+const logger = require('../coltWebAppLogger')();
 
 function logStuff(alogger) {
 	alogger.fatal('fatal');

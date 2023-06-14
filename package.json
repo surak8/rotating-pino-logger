@@ -20,13 +20,14 @@
 	"devDependencies": {},
 	"scripts": {
 		"start": "node src/index.js",
-		"clean": "yarn clean:0&&yarn clean:1&yarn clean:2&&yarn clean:3&&yarn clean:4&&yarn clean:5",
+		"clean": "yarn clean:0&&yarn clean:1&yarn clean:2&&yarn clean:3&&yarn clean:4&&yarn clean:5&&yarn clean:6",
 		"clean:0": "IF EXIST node_modules RD /Q/S node_modules",
 		"clean:1": "IF EXIST logs RD /q/s logs",
 		"clean:2": "IF EXIST test-logger RD /q/s test-logger",
 		"clean:3": "IF EXIST yarn.lock DEL /q yarn.lock",
 		"clean:4": "IF EXIST yarn-error.log DEL /q yarn-error.log",
 		"clean:5": "IF EXIST package-lock.json DEL /q package-lock.json",
+		"clean:6": "IF EXIST test-logger*.log DEL /q test-logger*.log",
 		"doc": "jsdoc -r src --verbose",
 		"upgrade": "npx yarn-upgrade-all"
 	}

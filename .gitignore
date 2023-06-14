@@ -2,3 +2,4 @@ node_modules
 out
 logs
 yarn.lock
+test-logger*.log

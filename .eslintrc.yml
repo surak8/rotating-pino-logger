@@ -11,6 +11,38 @@ rules:
   indent:
     - error
     - tab
+    - SwitchCase: 1
+      VariableDeclarator: 1
+      outerIIFEBody: 1
+      MemberExpression: 1
+      #StaticBlock:
+      #CallExpression:
+      ArrayExpression: 1
+
+      #FunctionDeclaration:
+      #  - body: 1
+      #  - parameters: 2
+    #- ignoredNodes:
+    #  - ConditionalExpression
+    #    FunctionDeclaration
+    #    FunctionExpression
+    #    ImportDeclaration
+    #    SwitchCase
+    #    VariableDeclarator
+        #MemberExpression
+        #MemberExpression
+        #MemberExpression
+    #- FunctionDeclaration: 
+    #  - body: 1
+    #    parameters: 2
+    #  FunctionExpression: 
+    #  - body: 3
+    #    parameters: 4
+    #  ImportDeclaration: first
+    #  MemberExpression: 1
+    #- ObjectExpression: 1
+    #  VariableDeclarator: 1
+
   linebreak-style:
     - error
     - windows
