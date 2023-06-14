@@ -1,3 +1,8 @@
 https://www.npmjs.com/package/simple-node-logger
 
 https://stackoverflow.com/questions/65448014/how-to-use-simple-node-logger-module
+
+
+git remote add origin https://github.com/surak8/rotating-pino-logger.git
+git branch -M main
+git push -u origin main
